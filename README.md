@@ -101,5 +101,8 @@ Todas as restantes condições da GPL v3 aplicam-se.
 
 O texto completo da GNU GPL v3 encontra-se disponível em:
 https://www.gnu.org/licenses/gpl-3.0.html
+
+![License: GPL v3 NC](https://img.shields.io/badge/License-GPLv3--NC-blue.svg)
+
   
 
