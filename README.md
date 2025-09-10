@@ -92,4 +92,14 @@ GitHub
 
 📜 Licença
 
-Este projeto é disponibilizado sob a licença MIT.
+Este projeto é disponibilizado sob a licença GPL v3, com a seguinte modificação:
+- É expressamente proibido o uso deste código-fonte, total ou parcial, para fins
+  comerciais ou de monetização, sem autorização prévia e escrita do autor.
+
+
+Todas as restantes condições da GPL v3 aplicam-se.
+
+O texto completo da GNU GPL v3 encontra-se disponível em:
+https://www.gnu.org/licenses/gpl-3.0.html
+  
+
