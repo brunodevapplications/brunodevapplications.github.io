@@ -15,6 +15,7 @@ import * as SystemUI from "expo-system-ui";
 import { BannerAd, BannerAdSize, TestIds } from "react-native-google-mobile-ads";
 import { initAdsAndConsent, manageConsent } from "./src/consent";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import i18n from "./src/locales/translations";
 
 // --- App root com SafeAreaProvider ---
 export default function App() {
@@ -78,12 +79,12 @@ function MainApp() {
       setConsent(c);
       setAdKey((k) => k + 1);
       Alert.alert(
-        "Consentimento",
-        c.canServePersonalizedAds ? "Ativados anúncios personalizados." : "Ativados anúncios não personalizados."
+        i18n.t("consentTitle"),
+        c.canServePersonalizedAds ? i18n.t("consentOn") : i18n.t("consentOff")
       );
     } catch (e) {
       console.warn("Manage consent error:", e);
-      Alert.alert("Consentimento", "Não foi possível alterar agora.");
+      Alert.alert(i18n.t("consentTitle"), i18n.t("consentErr"));
     }
   };
 
@@ -131,15 +132,15 @@ function MainApp() {
     const hNoturnasNormaisNum = Math.floor(parseNum(horasNoturnasNormais));
 
     if (!salarioNum || !horasSemanaNum) {
-      Alert.alert("Dados em falta", "Preenche salário bruto mensal e horas semanais.");
+      Alert.alert(i18n.t("alertaDadosTitulo"), i18n.t("alertaDadosMsg"));
       return;
     }
     if (horasExtraNum < 0 || hNoturnasExtraNum < 0 || hNoturnasNormaisNum < 0) {
-      Alert.alert("Valor inválido", "As horas não podem ser negativas.");
+      Alert.alert(i18n.t("alertaInvalidoTitulo"), i18n.t("alertaNegativos"));
       return;
     }
     if (hNoturnasExtraNum > horasExtraNum) {
-      Alert.alert("Valor inválido", "Horas noturnas extra não podem exceder o total de horas extra.");
+      Alert.alert(i18n.t("alertaInvalidoTitulo"), i18n.t("alertaNoturnasExcedem"));
       return;
     }
 
@@ -219,21 +220,27 @@ function MainApp() {
       <View style={styles.histItem}>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Text style={styles.histDate}>{formatDate(item.at)}</Text>
-          <Text style={styles.histPill}>{input.tipo === "diaUtil" ? "Dia útil" : "Descanso/Feriado"}</Text>
+          <Text style={styles.histPill}>
+            {input.tipo === "diaUtil" ? i18n.t("histPillDiaUtil") : i18n.t("histPillDescanso")}
+          </Text>
         </View>
         <Text style={styles.histLine}>
-          💰 Salário: {input.salario}€ • ⌛ {input.horasSemana}h/sem
+          {i18n.t("histSalarioHoras", { salario: input.salario, horasSemana: input.horasSemana })}
         </Text>
         <Text style={styles.histLine}>
-          ⏱️ Extra: {input.horasExtra}h (🌙 {input.horasNoturnasExtra}h) • Normais 🌙 {input.horasNoturnasNormais}h
+          {i18n.t("histExtrasLine", {
+            hExtra: input.horasExtra,
+            hNoturnasExtra: input.horasNoturnasExtra,
+            hNoturnasNormais: input.horasNoturnasNormais,
+          })}
         </Text>
         <Text style={styles.histLine}>
-          📌 VH: {output.VH}€ • Extra: {output.acrescimosExtra}€ • Noturno: {output.noturno}€
+          {i18n.t("histVHLine", { vh: output.VH, extra: output.acrescimosExtra, noturno: output.noturno })}
         </Text>
         {parseFloat(output.totalBrutoExtras) > 0 ? (
-          <Text style={styles.histTotal}>💵 Total EXTRA: {output.totalBrutoExtras}€</Text>
+          <Text style={styles.histTotal}>{i18n.t("histTotalExtra", { valor: output.totalBrutoExtras })}</Text>
         ) : (
-          <Text style={styles.histTotal}>💵 Total NOTURNO (normais): {output.totalBrutoNoturnasNormais}€</Text>
+          <Text style={styles.histTotal}>{i18n.t("histTotalNoturno", { valor: output.totalBrutoNoturnasNormais })}</Text>
         )}
       </View>
     );
@@ -246,112 +253,100 @@ function MainApp() {
         keyboardShouldPersistTaps="handled"
         style={{ backgroundColor: "#fff" }}
       >
-        <Text style={styles.title}>Horas+ Extra PT 🚀</Text>
+        <Text style={styles.title}>{i18n.t("title")}</Text>
 
-        <Text>💰 Salário bruto mensal (€)</Text>
+        <Text>{i18n.t("salario")}</Text>
         <TextInput
           style={styles.input}
           keyboardType="numeric"
           value={salario}
           onChangeText={setSalario}
-          placeholder="Ex.: 1000"
+          placeholder={i18n.t("placeholderSalario")}
         />
 
-        <Text>⌛ Horas semanais contratadas</Text>
+        <Text>{i18n.t("horasSemana")}</Text>
         <TextInput
           style={styles.input}
           keyboardType="numeric"
           value={horasSemana}
           onChangeText={setHorasSemana}
-          placeholder="Ex.: 40"
+          placeholder={i18n.t("placeholderHorasSemana")}
         />
 
-        <Text>⏱️ Nº de horas extra (total)</Text>
+        <Text>{i18n.t("horasExtra")}</Text>
         <TextInput
           style={styles.input}
           keyboardType="numeric"
           value={horasExtra}
           onChangeText={setHorasExtra}
-          placeholder="Ex.: 2"
+          placeholder={i18n.t("placeholderHorasExtra")}
         />
 
-        <Text>🌙 Nº de horas EXTRA em período noturno (22h–07h)</Text>
+        <Text>{i18n.t("horasExtraNocturnas")}</Text>
         <TextInput
           style={styles.input}
           keyboardType="numeric"
           value={horasNoturnasExtra}
           onChangeText={setHorasNoturnasExtra}
-          placeholder="Ex.: 1"
+          placeholder={i18n.t("placeholderHorasNoturnas")}
         />
 
-        <Text>🌙 Nº de horas NORMAIS em período noturno (22h–07h)</Text>
+        <Text>{i18n.t("horasNormaisNocturnas")}</Text>
         <TextInput
           style={styles.input}
           keyboardType="numeric"
           value={horasNoturnasNormais}
           onChangeText={setHorasNoturnasNormais}
-          placeholder="Ex.: 1"
+          placeholder={i18n.t("placeholderHorasNoturnas")}
         />
 
-        <Text>⚙️ Tipo de dia para as HORAS EXTRA</Text>
+        <Text>{i18n.t("tipoDia")}</Text>
         <View style={styles.segment}>
           <Pressable
             onPress={() => setTipo("diaUtil")}
             style={[styles.segmentBtn, tipo === "diaUtil" && styles.segmentBtnActive]}
           >
-            <Text style={[styles.segmentTxt, tipo === "diaUtil" && styles.segmentTxtActive]}>Dia útil</Text>
-            <Text style={[styles.segmentSub, tipo === "diaUtil" && styles.segmentTxtActive]}>
-              1ª +25%, seguintes +37,5%
-            </Text>
+            <Text style={[styles.segmentTxt, tipo === "diaUtil" && styles.segmentTxtActive]}>{i18n.t("diaUtil")}</Text>
+            <Text style={[styles.segmentSub, tipo === "diaUtil" && styles.segmentTxtActive]}>{i18n.t("regraDiaUtil")}</Text>
           </Pressable>
 
           <Pressable
             onPress={() => setTipo("descanso")}
             style={[styles.segmentBtn, styles.segmentBtnRight, tipo === "descanso" && styles.segmentBtnActive]}
           >
-            <Text style={[styles.segmentTxt, tipo === "descanso" && styles.segmentTxtActive]}>
-              Descanso/Feriado
-            </Text>
-            <Text style={[styles.segmentSub, tipo === "descanso" && styles.segmentTxtActive]}>+50%/h</Text>
+            <Text style={[styles.segmentTxt, tipo === "descanso" && styles.segmentTxtActive]}>{i18n.t("descanso")}</Text>
+            <Text style={[styles.segmentSub, tipo === "descanso" && styles.segmentTxtActive]}>{i18n.t("regraDescanso")}</Text>
           </Pressable>
         </View>
 
-        <Button title="CALCULAR" onPress={calcular} />
+        <Button title={i18n.t("calcular")} onPress={calcular} />
 
         {resultado && (
           <View style={styles.resultado}>
-            <Text>📌 Valor hora base (VH) — BRUTO: {resultado.VH} €</Text>
+            <Text>{i18n.t("valorHora", { valor: resultado.VH })}</Text>
 
             {parseFloat(resultado.totalBrutoExtras) > 0 && (
               <>
-                <Text>🧮 Base das horas extra (somatório VH): {resultado.baseHorasExtra} €</Text>
-                <Text>➕ Acréscimos de horas extra — BRUTO: {resultado.acrescimosExtra} €</Text>
+                <Text>{i18n.t("baseHorasExtra", { valor: resultado.baseHorasExtra })}</Text>
+                <Text>{i18n.t("acrescimos", { valor: resultado.acrescimosExtra })}</Text>
               </>
             )}
 
-            <Text>🌙 Subsídio noturno (normais + extra) — BRUTO: {resultado.noturno} €</Text>
-            <Text>  • Inclui {resultado.noturnoHorasNormais} € de horas normais noturnas</Text>
+            <Text>{i18n.t("subsidioNoturno", { valor: resultado.noturno })}</Text>
+            <Text>{i18n.t("subsidioInclui", { valor: resultado.noturnoHorasNormais })}</Text>
 
             {parseFloat(resultado.totalBrutoExtras) > 0 && (
-              <Text style={styles.total}>💵 Total BRUTO pelas HORAS EXTRA: {resultado.totalBrutoExtras} €</Text>
+              <Text style={styles.total}>{i18n.t("totalExtra", { valor: resultado.totalBrutoExtras })}</Text>
             )}
 
             {resultado.isNightOnly && (
-              <Text style={styles.total}>
-                💵 Total BRUTO pelas HORAS NOTURNAS (normais): {resultado.totalBrutoNoturnasNormais} €
-              </Text>
+              <Text style={styles.total}>{i18n.t("totalNoturno", { valor: resultado.totalBrutoNoturnasNormais })}</Text>
             )}
 
             <View style={styles.legalBox}>
-              <Text style={styles.legalTitle}>ℹ️ Observações / Enquadramento</Text>
-              <Text style={styles.legalTxt}>
-                • Valores <Text style={{ fontWeight: "bold" }}>BRUTOS</Text>.
-              </Text>
-              <Text style={styles.legalTxt}>
-                • O subsídio noturno (+25% do VH) aplica-se às horas entre 22h–07h e é acumulável
-                com o acréscimo de hora extra, exceto se definido de forma diferente no contrato de
-                trabalho ou em Contrato Coletivo de Trabalho.
-              </Text>
+              <Text style={styles.legalTitle}>{i18n.t("observacoes")}</Text>
+              <Text style={styles.legalTxt}>• {i18n.t("obs1").replace("• ", "")}</Text>
+              <Text style={styles.legalTxt}>• {i18n.t("obs2").replace("• ", "")}</Text>
             </View>
           </View>
         )}
@@ -359,27 +354,27 @@ function MainApp() {
         {/* --- HISTÓRICO --- */}
         <View style={styles.histBox}>
           <View style={styles.histHeader}>
-            <Text style={styles.histTitle}>📒 Histórico</Text>
+            <Text style={styles.histTitle}>{i18n.t("historico")}</Text>
             <View style={{ flexDirection: "row", gap: 8 }}>
               <Pressable onPress={() => setShowHistory((v) => !v)} style={styles.histBtn}>
-                <Text>{showHistory ? "Ocultar" : "Mostrar"}</Text>
+                <Text>{showHistory ? i18n.t("ocultar") : i18n.t("mostrar")}</Text>
               </Pressable>
               <Pressable
                 onPress={() =>
-                  Alert.alert("Limpar histórico", "Tens a certeza?", [
-                    { text: "Cancelar", style: "cancel" },
-                    { text: "Limpar", style: "destructive", onPress: clearHistory },
+                  Alert.alert(i18n.t("confirmarLimpar"), i18n.t("tensCerteza"), [
+                    { text: i18n.t("cancelar"), style: "cancel" },
+                    { text: i18n.t("limpar"), style: "destructive", onPress: clearHistory },
                   ])
                 }
                 style={styles.histBtn}
               >
-                <Text>Limpar</Text>
+                <Text>{i18n.t("limpar")}</Text>
               </Pressable>
             </View>
           </View>
 
           {showHistory && history.length === 0 && (
-            <Text style={{ color: "#666" }}>Sem registos ainda. Faz um cálculo para guardar aqui.</Text>
+            <Text style={{ color: "#666" }}>{i18n.t("semRegistos")}</Text>
           )}
 
           {showHistory && history.length > 0 && (
@@ -398,13 +393,13 @@ function MainApp() {
       {consent && (
         <View style={[styles.bannerWrap, { paddingBottom: insets.bottom || 8 }]}>
           <Pressable onPress={onManageConsent} style={styles.manageBtn}>
-            <Text>Gerir consentimento de anúncios</Text>
+            <Text>{i18n.t("gerirConsent")}</Text>
           </Pressable>
           <Text style={styles.bannerState}>
-            Estado: {consent.canServePersonalizedAds ? "Personalizados" : "Não personalizados"}
+            {i18n.t("labelEstado")} {consent.canServePersonalizedAds ? i18n.t("estadoPersonalizados") : i18n.t("estadoNaoPersonalizados")}
           </Text>
           <BannerAd
-            key={adKey} // recarrega ao mudar consent
+            key={adKey}
             unitId={TestIds.BANNER} // trocar pelo teu ad unit id em produção
             size={BannerAdSize.ADAPTIVE_BANNER}
             requestOptions={{

@@ -1,59 +1,75 @@
-// src/consent.js
 import mobileAds, { MaxAdContentRating } from "react-native-google-mobile-ads";
-import {
-  AdsConsent,
-  AdsConsentDebugGeography,
-} from "react-native-google-mobile-ads";
+import { AdsConsent, AdsConsentDebugGeography } from "react-native-google-mobile-ads";
 
-async function gather() {
-  // 1) Atualiza info de consentimento (com debug opcional)
-  await AdsConsent.requestInfoUpdate({
-    debugGeography: DEBUG_UMP
-      ? AdsConsentDebugGeography.EEA
-      : AdsConsentDebugGeography.DISABLED,
-    // testDeviceIdentifiers: ['HASHED-DEVICE-ID'], // opcional
-  });
+// ⚠️ DEV: força mostrar o formulário como se estivesses na EEE.
+// Coloca em "false" quando fores para produção.
+const DEBUG_UMP = true;
 
-  // 2) Carrega/mostra formulário se necessário
-  await AdsConsent.loadAndShowConsentFormIfRequired();
-
-  // 3) Lê o estado atual + escolhas do utilizador
+async function readState() {
   const info = await AdsConsent.getConsentInfo(); // { status, canRequestAds, isConsentFormAvailable }
   let choices = {};
   try {
-    choices = await AdsConsent.getUserChoices(); // pode falhar em alguns ambientes
+    choices = await AdsConsent.getUserChoices(); // pode não estar disponível em todos os devices
   } catch (_) {}
 
-  // Personalizados se o utilizador permitiu "selectPersonalisedAds"
   const canServePersonalizedAds = choices?.selectPersonalisedAds === true;
-
-  return {
-    status: info?.status,                     // UNKNOWN | REQUIRED | NOT_REQUIRED | OBTAINED
-    canRequestAds: !!info?.canRequestAds,     // se o SDK pode pedir anúncios
-    canServePersonalizedAds,                  // flag para personalizar (ou não)
-  };
+  return { info, choices, canServePersonalizedAds };
 }
 
+/**
+ * Inicializa AdMob + pede consentimento inicial
+ */
 export async function initAdsAndConsent() {
-  // Regras de pedido (opcional mas recomendado)
+  // 1) Configuração dos anúncios (nível de conteúdo, idade, etc.)
   await mobileAds().setRequestConfiguration({
     maxAdContentRating: MaxAdContentRating.PG,
     tagForChildDirectedTreatment: false,
     tagForUnderAgeOfConsent: false,
-    testDeviceIdentifiers: [],
+    testDeviceIdentifiers: [], // podes adicionar o teu device ID aqui
   });
 
-  const consent = await gather();
+  // 2) Atualiza informação de consentimento
+  await AdsConsent.requestInfoUpdate({
+    debugGeography: DEBUG_UMP
+      ? AdsConsentDebugGeography.EEA
+      : AdsConsentDebugGeography.DISABLED,
+  });
 
-  // Inicializa o SDK de anúncios (podes condicionar por canRequestAds se quiseres)
+  // 3) Mostra o formulário se for necessário
+  await AdsConsent.loadAndShowConsentFormIfRequired();
+
+  // 4) Lê estado atual
+  const { canServePersonalizedAds } = await readState();
+
+  // 5) Inicializa AdMob (só depois do consentimento)
   await mobileAds().initialize();
 
-  return consent;
+  return { canServePersonalizedAds };
 }
 
-// Botão "Gerir consentimento"
+/**
+ * Botão "Gerir consentimento"
+ */
 export async function manageConsent() {
-  await AdsConsent.reset();      // força reapresentar o formulário
-  const consent = await gather();
-  return consent;
+  // 1) Limpa estado anterior
+  await AdsConsent.reset();
+
+  // 2) Atualiza info novamente
+  await AdsConsent.requestInfoUpdate({
+    debugGeography: DEBUG_UMP
+      ? AdsConsentDebugGeography.EEA
+      : AdsConsentDebugGeography.DISABLED,
+  });
+
+  // 3) Força reabrir o formulário
+  try {
+    await AdsConsent.loadAndShowConsentForm();
+  } catch (e) {
+    // fallback: se não houver form disponível
+    await AdsConsent.loadAndShowConsentFormIfRequired();
+  }
+
+  // 4) Lê estado atualizado
+  const { canServePersonalizedAds } = await readState();
+  return { canServePersonalizedAds };
 }
