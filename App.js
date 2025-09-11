@@ -89,7 +89,7 @@ function MainApp() {
   };
 
   const parseNum = (v) => {
-    const n = parseFloat((v || "").toString().replace(",", "."));
+    const n = parseFloat(String(v ?? "").replace(",", ".").trim());
     return isNaN(n) ? 0 : n;
   };
 
