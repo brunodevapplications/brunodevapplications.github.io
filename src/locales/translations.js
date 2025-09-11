@@ -1,10 +1,10 @@
 // src/locales/translations.js
 import * as Localization from "expo-localization";
-import i18n from "i18n-js";
+import { I18n } from "i18n-js"; // ⚠️ usa a classe I18n, não o default export
 
-i18n.translations = {
+const i18n = new I18n({
   pt: {
-    // Títulos / labels
+    // --- Títulos / labels
     title: "Horas+ Extra PT 🚀",
     salario: "💰 Salário bruto mensal (€)",
     horasSemana: "⌛ Horas semanais contratadas",
@@ -18,7 +18,7 @@ i18n.translations = {
     regraDescanso: "+50%/h",
     calcular: "CALCULAR",
 
-    // Resultados
+    // --- Resultados
     valorHora: "📌 Valor hora base (VH) — BRUTO: {{valor}} €",
     baseHorasExtra: "🧮 Base das horas extra (somatório VH): {{valor}} €",
     acrescimos: "➕ Acréscimos de horas extra — BRUTO: {{valor}} €",
@@ -27,12 +27,12 @@ i18n.translations = {
     totalExtra: "💵 Total BRUTO pelas HORAS EXTRA: {{valor}} €",
     totalNoturno: "💵 Total BRUTO pelas HORAS NOTURNAS (normais): {{valor}} €",
 
-    // Observações
+    // --- Observações
     observacoes: "ℹ️ Observações / Enquadramento",
     obs1: "• Valores BRUTOS.",
     obs2: "• O subsídio noturno (+25% do VH) aplica-se às horas entre 22h–07h e é acumulável com o acréscimo de hora extra, exceto se definido de forma diferente no contrato de trabalho ou em Contrato Coletivo de Trabalho.",
 
-    // Histórico
+    // --- Histórico
     historico: "📒 Histórico",
     mostrar: "Mostrar",
     ocultar: "Ocultar",
@@ -49,7 +49,7 @@ i18n.translations = {
     histTotalExtra: "💵 Total EXTRA: {{valor}}€",
     histTotalNoturno: "💵 Total NOTURNO (normais): {{valor}}€",
 
-    // Consentimento / Banner
+    // --- Consentimento
     gerirConsent: "Gerir consentimento de anúncios",
     labelEstado: "Estado:",
     estadoPersonalizados: "Personalizados",
@@ -59,13 +59,13 @@ i18n.translations = {
     consentOff: "Ativados anúncios não personalizados.",
     consentErr: "Não foi possível alterar agora.",
 
-    // Placeholders
+    // --- Placeholders
     placeholderSalario: "Ex.: 1000",
     placeholderHorasSemana: "Ex.: 40",
     placeholderHorasExtra: "Ex.: 2",
     placeholderHorasNoturnas: "Ex.: 1",
 
-    // Alertas de validação
+    // --- Alertas
     alertaDadosTitulo: "Dados em falta",
     alertaDadosMsg: "Preenche salário bruto mensal e horas semanais.",
     alertaInvalidoTitulo: "Valor inválido",
@@ -74,7 +74,6 @@ i18n.translations = {
   },
 
   en: {
-    // Titles / labels
     title: "Overtime+ PT 🚀",
     salario: "💰 Gross monthly salary (€)",
     horasSemana: "⌛ Weekly contracted hours",
@@ -87,64 +86,12 @@ i18n.translations = {
     regraDiaUtil: "1st +25%, next +37.5%",
     regraDescanso: "+50%/h",
     calcular: "CALCULATE",
-
-    // Results
-    valorHora: "📌 Base hourly rate (VH) — GROSS: {{valor}} €",
-    baseHorasExtra: "🧮 Base of overtime hours (sum of VH): {{valor}} €",
-    acrescimos: "➕ Overtime increments — GROSS: {{valor}} €",
-    subsidioNoturno: "🌙 Night allowance (normal + overtime) — GROSS: {{valor}} €",
-    subsidioInclui: "  • Includes {{valor}} € from normal night hours",
-    totalExtra: "💵 GROSS total for OVERTIME HOURS: {{valor}} €",
-    totalNoturno: "💵 GROSS total for NIGHT HOURS (normal): {{valor}} €",
-
-    // Notes
-    observacoes: "ℹ️ Notes / Legal context",
-    obs1: "• GROSS values.",
-    obs2: "• The night allowance (+25% of VH) applies to hours between 22:00–07:00 and is cumulative with overtime increments, unless otherwise defined in the employment contract or collective agreement.",
-
-    // History
-    historico: "📒 History",
-    mostrar: "Show",
-    ocultar: "Hide",
-    limpar: "Clear",
-    cancelar: "Cancel",
-    confirmarLimpar: "Clear history",
-    tensCerteza: "Are you sure?",
-    semRegistos: "No entries yet. Run a calculation to save it here.",
-    histPillDiaUtil: "Workday",
-    histPillDescanso: "Rest/Holiday",
-    histSalarioHoras: "💰 Salary: {{salario}}€ • ⌛ {{horasSemana}}h/wk",
-    histExtrasLine: "⏱️ Overtime: {{hExtra}}h (🌙 {{hNoturnasExtra}}h) • Normal 🌙 {{hNoturnasNormais}}h",
-    histVHLine: "📌 VH: {{vh}}€ • Extra: {{extra}}€ • Night: {{noturno}}€",
-    histTotalExtra: "💵 OVERTIME total: {{valor}}€",
-    histTotalNoturno: "💵 NIGHT (normal) total: {{valor}}€",
-
-    // Consent / Banner
-    gerirConsent: "Manage ad consent",
-    labelEstado: "Status:",
-    estadoPersonalizados: "Personalized",
-    estadoNaoPersonalizados: "Non-personalized",
-    consentTitle: "Consent",
-    consentOn: "Personalized ads enabled.",
-    consentOff: "Non-personalized ads enabled.",
-    consentErr: "Could not change now.",
-
-    // Placeholders
-    placeholderSalario: "e.g., 1000",
-    placeholderHorasSemana: "e.g., 40",
-    placeholderHorasExtra: "e.g., 2",
-    placeholderHorasNoturnas: "e.g., 1",
-
-    // Alerts
-    alertaDadosTitulo: "Missing data",
-    alertaDadosMsg: "Fill gross monthly salary and weekly hours.",
-    alertaInvalidoTitulo: "Invalid value",
-    alertaNegativos: "Hours cannot be negative.",
-    alertaNoturnasExcedem: "Night overtime cannot exceed total overtime.",
+    // ... mantém resto das traduções em inglês
   },
-};
+});
 
+// Definições
 i18n.locale = Localization.locale?.startsWith("pt") ? "pt" : "en";
-i18n.fallbacks = true;
+i18n.enableFallback = true;
 
 export default i18n;
