@@ -25,3 +25,64 @@ Consulte a GNU General Public License para mais detalhes.
 Deverá ter recebido uma cópia da GNU General Public License
 juntamente com este programa. Caso contrário, veja:
 <https://www.gnu.org/licenses/gpl-3.0.html>.
+
+------
+
+GPL v3 License – Modified (Non-Commercial Use)
+
+Copyright (c) 2025 Bruno Oliveira
+
+This software is made available under the terms of the GNU General Public License v3.0,
+with the following additional restriction:
+
+- The use of this source code, in whole or in part, for commercial purposes,
+  monetization, or distribution for profit is strictly prohibited without the prior
+  written authorization of the author.
+
+All other conditions of the GNU GPL v3 apply.
+
+---
+
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, version 3 of the License.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see:
+<https://www.gnu.org/licenses/gpl-3.0.html>.
+
+
+------
+
+Licence GPL v3 – Modifiée (Usage Non Commercial)
+
+Copyright (c) 2025 Bruno Oliveira
+
+Ce logiciel est mis à disposition selon les termes de la GNU General Public License v3.0,
+avec la restriction supplémentaire suivante :
+
+- L’utilisation de ce code source, en tout ou en partie, à des fins commerciales,
+  de monétisation ou de distribution à but lucratif est strictement interdite
+  sans l’autorisation écrite préalable de l’auteur.
+
+Toutes les autres conditions de la GNU GPL v3 s’appliquent.
+
+---
+
+Ce programme est un logiciel libre : vous pouvez le redistribuer et/ou le modifier
+selon les termes de la GNU General Public License telle que publiée par la
+Free Software Foundation, en version 3 de la Licence.
+
+Ce programme est distribué dans l’espoir qu’il sera utile,
+mais SANS AUCUNE GARANTIE ; sans même la garantie implicite de
+COMMERCIALISATION ou d’ADÉQUATION À UN USAGE PARTICULIER.
+Voir la GNU General Public License pour plus de détails.
+
+Vous devriez avoir reçu une copie de la GNU General Public License
+avec ce programme. Sinon, consultez :
+<https://www.gnu.org/licenses/gpl-3.0.html>.
